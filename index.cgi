@@ -458,12 +458,20 @@ def handleIncomingComment(fs):
     filename = "%s.txt" % name
     comments_for_entry = getComments(filename)
 
-    # save and send only valid comments
-    if (author and email and comment and \
-            name and commentnum and \
-            maxcomments > -1 and \
-            len(comments_for_entry) < maxcomments and \
-            nospam == nospamanswer) is False:
+    # validate comment
+    if not author:
+        return None
+    if not email:
+        return None
+    if not comment:
+        return None
+    if not name:
+        return None
+    if maxcomments == -1: # no comments allowed
+        return None
+    if len(comments_for_entry) >= maxcomments: # no more comments allowed
+        return None
+    if nospam != nospamanswer: # wrong answer
         return None
 
     # remove html tags
