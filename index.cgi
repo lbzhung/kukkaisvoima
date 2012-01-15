@@ -121,7 +121,7 @@ l_toggle = "Click year to show months"
 from kukkaisvoima_settings import *
 
 # version
-version = '12dev'
+version = '12'
 
 # for date collisions
 dates = {}
