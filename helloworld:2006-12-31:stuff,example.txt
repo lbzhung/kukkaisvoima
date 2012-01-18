@@ -4,12 +4,22 @@ Hello world
 headline html markup can be used for the actual blog entry.<p>
 
 <ul>
-	<li>Like this<li>
-	<li>And this<li>
+	<li>Like this</li>
+	<li>And this</li>
 </ul>
 
 <p>Remember to change the config variables in
-kukkaisvoima_settings.py, otherwise links and comments wont work!</p>
+kukkaisvoima_settings.py, otherwise links and comments wont work! The
+most important variable is:</p>
+
+<p>
+<i>baseurl ='http://yourdomain/blog/index.cgi'</i>
+</p>
+
+<p>
+Without changing that the CSS and feed icon image on the sidebar (<img alt="RSS Feed" src="feed-icon-14x14.png" style="vertical-align:top;
+border:none;"/>) do not work properly.
+</p>
 
 <p>Note also that kukkaisvoima_settings.py file contains sensitive
 information and you should block all access to it from public web. For
