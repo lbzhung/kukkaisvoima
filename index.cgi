@@ -121,7 +121,7 @@ l_toggle = "Click year to show months"
 from kukkaisvoima_settings import *
 
 # version
-version = '12'
+version = '13'
 
 # for date collisions
 dates = {}
@@ -976,8 +976,8 @@ def renderSidebarCategories(catelist, rss_categories):
         print "<li%s><a href=\"%s/%s\">%s</a> (%s)" % (
             add_str, baseurl, quote_plus(cat), cat, len(catelist[cat]))
         if cat in rss_categories:
-            print "<a href=\"%s/%s/feed\"><img alt=\"RSS Feed Icon\" src=\"feed-icon-14x14.png\" style=\"vertical-align:top; border:none;\"/></a>" % \
-                (baseurl, cat)
+            print "<a href=\"%s/%s/feed\"><img alt=\"RSS Feed Icon\" src=\"%s/feed-icon-14x14.png\" style=\"vertical-align:top; border:none;\"/></a>" % \
+                (baseurl, cat, baseurl)
         print "</li>"
     print "</ul>"
 
@@ -1168,8 +1168,8 @@ def renderHtml(entries, path, catelist, arclist, admin, page):
 
     # sidebar
     print "<div id=\"sidebar\">"
-    print "<a href=\"%s/feed\">Subscribe <img alt=\"RSS Feed Icon\" src=\"feed-icon-14x14.png\" style=\"vertical-align:top; border:none;\"/></a>" % \
-        (baseurl)
+    print "<a href=\"%s/feed\">Subscribe <img alt=\"RSS Feed Icon\" src=\"%s/feed-icon-14x14.png\" style=\"vertical-align:top; border:none;\"/></a>" % \
+        (baseurl, baseurl)
 
     renderSidebarCategories(catelist, categories)
     renderSidebarSearch()
