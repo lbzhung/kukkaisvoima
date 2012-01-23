@@ -21,12 +21,14 @@ from public web. For example when using Apache webserver create
 # Config variables
 # Url of the blog (without trailing /)
 baseurl = 'http://yourdomain/blog/index.cgi'
+# Use absolute url for this, like http://yourdomain/blog/kukka.css
+stylesheet = 'kukka.css'
+# Use absolute url for this, like http://yourdomain/blog/feed-icon-14x14.png
+feedicon = 'feed-icon-14x14.png'
 blogname = 'Kukkaisvoima'
 slogan = 'Default installation'
 description = "Jee"
 encoding = 'iso-8859-15'
-# Use absolute url for this
-stylesheet = 'kukka.css'
 defaultauthor = 'You'
 favicon = 'http://yourdomain/favicon.ico'
 doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'

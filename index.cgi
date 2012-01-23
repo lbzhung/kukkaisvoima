@@ -46,12 +46,14 @@ except ImportError: # older python (older than 2.5) does not hashlib
 # Config variables
 # Url of the blog (without trailing /)
 baseurl = 'http://yourdomain/blog/index.cgi'
+# Use absolute url for this, like http://yourdomain/blog/kukka.css
+stylesheet = 'kukka.css'
+# Use absolute url for this, like http://yourdomain/blog/feed-icon-14x14.png
+feedicon = 'feed-icon-14x14.png'
 blogname = 'Kukkaisvoima'
 slogan = 'Default installation'
 description = "Jee"
 encoding = 'iso-8859-15'
-# Use absolute url for this
-stylesheet = 'kukka.css'
 defaultauthor = 'You'
 favicon = 'http://yourdomain/favicon.ico'
 doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
@@ -121,7 +123,7 @@ l_toggle = "Click year to show months"
 from kukkaisvoima_settings import *
 
 # version
-version = '13'
+version = '14'
 
 # for date collisions
 dates = {}
@@ -976,8 +978,8 @@ def renderSidebarCategories(catelist, rss_categories):
         print "<li%s><a href=\"%s/%s\">%s</a> (%s)" % (
             add_str, baseurl, quote_plus(cat), cat, len(catelist[cat]))
         if cat in rss_categories:
-            print "<a href=\"%s/%s/feed\"><img alt=\"RSS Feed Icon\" src=\"%s/feed-icon-14x14.png\" style=\"vertical-align:top; border:none;\"/></a>" % \
-                (baseurl, cat, baseurl)
+            print "<a href=\"%s/%s/feed\"><img alt=\"RSS Feed Icon\" src=\"%s\" style=\"vertical-align:top; border:none;\"/></a>" % \
+                (baseurl, cat, feedicon)
         print "</li>"
     print "</ul>"
 
@@ -1168,8 +1170,8 @@ def renderHtml(entries, path, catelist, arclist, admin, page):
 
     # sidebar
     print "<div id=\"sidebar\">"
-    print "<a href=\"%s/feed\">Subscribe <img alt=\"RSS Feed Icon\" src=\"%s/feed-icon-14x14.png\" style=\"vertical-align:top; border:none;\"/></a>" % \
-        (baseurl, baseurl)
+    print "<a href=\"%s/feed\">Subscribe <img alt=\"RSS Feed Icon\" src=\"%s\" style=\"vertical-align:top; border:none;\"/></a>" % \
+        (baseurl, feedicon)
 
     renderSidebarCategories(catelist, categories)
     renderSidebarSearch()

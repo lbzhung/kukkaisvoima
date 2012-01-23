@@ -10,14 +10,16 @@ headline html markup can be used for the actual blog entry.<p>
 
 <p>Remember to change the config variables in
 kukkaisvoima_settings.py, otherwise links and comments wont work! The
-most important variable is:</p>
+most important variables are (you should use full URL for these):</p>
 
 <p>
-<i>baseurl ='http://yourdomain/blog/index.cgi'</i>
+<i>baseurl ='http://yourdomain/blog/index.cgi'</i><br />
+<i>stylesheet = 'kukka.css'</i> <br />
+<i>feedicon = 'feed-icon-14x14.png'</i> <br />
 </p>
 
 <p>
-Without changing that the CSS and feed icon image on the sidebar (<img alt="RSS Feed" src="feed-icon-14x14.png" style="vertical-align:top;
+Without changing those the CSS and feed icon image on the sidebar (<img alt="RSS Feed" src="feed-icon-14x14.png" style="vertical-align:top;
 border:none;"/>) do not work properly.
 </p>
 
