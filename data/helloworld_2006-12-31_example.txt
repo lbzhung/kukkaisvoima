@@ -1,0 +1,31 @@
+Hello world
+
+This is example entry. First line is always headline. Below the
+headline html markup can be used for the actual blog entry.
+
+* Like this
+* And this
+
+Remember to change the config variables in
+kukkaisvoima_settings.py, otherwise links and comments wont work! The
+most important variables are (you should use full URL for these):
+
+*baseurl ='http://yourdomain/blog/index.cgi'*  
+*stylesheet = 'kukka.css'*  
+*feedicon = 'feed-icon-14x14.png'*  
+
+Without changing those the CSS and feed icon image on the sidebar (<img alt="RSS Feed" src="feed-icon-14x14.png" style="vertical-align:top;
+border:none;"/>) do not work properly.
+
+Note also that kukkaisvoima_settings.py file contains sensitive
+information and you should block all access to it from public web. For
+example when using [Apache HTTP server]("http://httpd.apache.org/")
+the following rule could be added to .htaccess file in the
+Kukkaisvoima directory:
+
+    <files kukkaisvoima_settings.py>
+     order allow,deny
+     deny from all
+    </files>
+
+Have fun!

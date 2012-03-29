@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding:UTF-8 -*-
 """
 
 Kukkaisvoima a lightweight weblog system.
@@ -19,6 +20,8 @@ License along with Kukkaisvoima.  If not, see
 <http://www.gnu.org/licenses/>.
 
 """
+import warnings
+warnings.simplefilter("ignore", DeprecationWarning)
 
 import cgi
 import pickle
@@ -42,6 +45,8 @@ except ImportError: # older python (older than 2.5) does not hashlib
     import md5
     md5fun = md5.new
 
+# support Markdown
+import markdown
 
 # Config variables
 # Url of the blog (without trailing /)
@@ -82,7 +87,7 @@ sidebarcomments = True
 # http://gravatar.com for more information
 gravatarsupport = True
 # Entry and comment Date format
-dateformat = "%F"
+dateformat = "%F %T"
 # Show only first paragraph when showing many entries
 entrysummary = False
 
@@ -121,6 +126,7 @@ l_toggle = "Click year to show months"
 
 # import user settings
 from kukkaisvoima_settings import *
+from security import *
 
 # version
 version = '14'
@@ -157,7 +163,7 @@ def dateToString(date):
     return "%s%s" % (strftime(dateformat, date.timetuple()), timeAgo(date))
 
 def generateDate(fileName):
-    name, date, categories = fileName[:-4].split(':')
+    name, date, categories = fileName[:-4].split('_')
     mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime = os.stat(fileName)
     filedate= datetime(*localtime(mtime)[0:6])
     date = "%s %s:%s:%s" % (date,
@@ -536,13 +542,22 @@ class Entry:
     def __init__(self, fileName, datadir):
         self.fileName = fileName
         self.fullPath = os.path.join(datadir, fileName)
-        self.text = open(self.fullPath).readlines()
-        self.text = [line for line in self.text if not line.startswith('#')]
-        self.headline = self.text[0]
-        self.text = self.text[1:]
+
+        # support markdown
+        tempf = open(self.fullPath, 'r')
+        self.headline = tempf.readline()
+        temptext = tempf.read()
+        temptext = temptext.decode(encoding)
+        temptext = markdown.markdown(temptext)
+        temptext = temptext.encode(encoding)
+        self.text = temptext.splitlines(True)
+
+        #self.text = [line for line in self.text if not line.startswith('#')]
+        #self.headline = self.text[0]
+        #self.text = self.text[1:]
         self.author = defaultauthor
         self.cat = ''
-        name, date, categories = fileName[:-4].split(':')
+        name, date, categories = fileName[:-4].split('_')
         self.cat = categories.split(',')
         self.date = generateDate(self.fullPath)
         self.comments = getComments(self.fileName)
@@ -626,7 +641,7 @@ class Entries:
         return ents
 
 def renderHtmlFooter():
-    print "<div id=\"footer\">Powered by <a href=\"http://23.fi/kukkaisvoima\">Kukkaisvoima</a> version %s</div>" % version
+    print "<div id=\"footer\" style=\"text-align: right\">Powered by <a href=\"http://23.fi/kukkaisvoima\">Kukkaisvoima</a> %s</div>" % l_footer
     print "</div>" # content1
     print "</body>"
     print "</html>"
@@ -719,22 +734,22 @@ def renderHtmlHeader(title=None, links=[]):
           {
               with (thisform)
               {
-                  if (validate_not_null(author, "Name must be filled in") == false)
+                  if (validate_not_null(author, "必须填名字") == false)
                   {
                       author.focus();
                       return false;
                   }
-                  if (validate_email(email,"Email must be filled in and must be valid!") == false)
+                  if (validate_email(email,"必须填写有效的邮箱名") == false)
                   {
                       email.focus();
                       return false;
                   }
-                  if (validate_nospam(nospam, "Wrong answer!") == false)
+                  if (validate_nospam(nospam, "错误的答案") == false)
                   {
                       nospam.focus();
                       return false;
                   }
-                  if (validate_not_null(comment, "Comment cannot be empty") == false)
+                  if (validate_not_null(comment, "评论不能为空") == false)
                   {
                       comment.focus();
                       return false;
@@ -1143,7 +1158,7 @@ def renderHtml(entries, path, catelist, arclist, admin, page):
                 print "<label for=\"nospam\"><small>%s</small></label></p>" % l_nospam_question
                 print "<p>%s</p>" % l_no_html
                 print "<p><textarea name=\"comment\" id=\"comment\" cols=\"40\" rows=\"7\" tabindex=\"4\"></textarea></p>"
-                print "<p><input name=\"submit\" type=\"submit\" id=\"submit\" tabindex=\"5\" value=\"Submit\" />"
+                print "<p><input name=\"submit\" type=\"submit\" id=\"submit\" tabindex=\"5\" value=\"提交\" />"
                 print "<input type=\"hidden\" name=\"comment_post_ID\" value=\"11\" />"
                 print "</p>"
                 print "<p><input type=\"checkbox\" name=\"subscribe\" id=\"subscribe\" tabindex=\"6\" value=\"subscribe\">%s</label></p>" % l_notify_comments
@@ -1152,25 +1167,29 @@ def renderHtml(entries, path, catelist, arclist, admin, page):
     if len(entries) > 1:
         print "<div class=\"navi\">"
         if page > 0:
-            print "<a href=\"%s/%s?page=%s\">%s</a>" % (
+            print "<div style=\"width: 50%; float: right; text-align: right;\">"
+            print "<a href=\"%s/%s?page=%s\"><h3>%s</h3></a>" % (
                 baseurl,
                 '/'.join(path),
                 page-1,
                 l_previouspage
                 )
+            print "</div>"
         if len(entries) == numberofentriesperpage:
-            print "<a href=\"%s/%s?page=%s\">%s</a>" % (
+            print "<div style=\"width: 50%; float: left; text-align: left;\">"
+            print "<a href=\"%s/%s?page=%s\"><h3>%s</h3></a>" % (
                 baseurl,
                 '/'.join(path),
                 page+1,
                 l_nextpage
                 )
+            print "</div>"
         print "</div>"
     print "</div>" # content2
 
     # sidebar
     print "<div id=\"sidebar\">"
-    print "<a href=\"%s/feed\">Subscribe <img alt=\"RSS Feed Icon\" src=\"%s\" style=\"vertical-align:top; border:none;\"/></a>" % \
+    print "<a href=\"%s/feed\">订阅 <img alt=\"RSS Feed Icon\" src=\"%s\" style=\"vertical-align:top; border:none;\"/></a>" % \
         (baseurl, feedicon)
 
     renderSidebarCategories(catelist, categories)
@@ -1273,10 +1292,10 @@ def main():
     for entry in files:
         if not entry.endswith(".txt"):
             continue
-        if not len(entry.split(":")) == 3:
+        if not len(entry.split("_")) == 3:
             continue
         try:
-            year, month, day = entry.split(":")[1].split("-")
+            year, month, day = entry.split("_")[1].split("-")
             if int(year) == 0 or \
                     (int(month) < 1 or int(month) > 12) or \
                     (int(day) < 1 or int(day) > 31):
@@ -1303,7 +1322,7 @@ def main():
     categorieslist = {}
     archivelist = {}
     for file in filelist:
-        name, date, categories = filelist[file][:-4].split(':')
+        name, date, categories = filelist[file][:-4].split('_')
         adate = date[:7]
         if adate.endswith('-'):
             adate =  "%s-0%s" % (adate[:4], adate[5])
