@@ -37,6 +37,8 @@ doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http:
 blogemail = 'you@yourdomain'
 # Language for the feed
 language = 'zh'
+# time zone of GMT
+timezone = '+0800'
 # Number of entries per page
 numberofentriesperpage = 4
 # Directory which contains the blog entries

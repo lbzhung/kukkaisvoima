@@ -1203,7 +1203,9 @@ def renderHtml(entries, path, catelist, arclist, admin, page):
     renderHtmlFooter()
 
 def renderFeed(entries, path, categorieslist):
-    rfc822time = "%a, %d %b %Y %H:%M:%S +0200"
+    # fix zone time
+    #rfc822time = "%a, %d %b %Y %H:%M:%S +0200"
+    rfc822time = "%a, %d %b %Y %H:%M:%S "+timezone
     print "Content-Type: text/xml; charset=%s\n" % encoding
     print "<?xml version=\"1.0\" encoding=\"%s\"?>" % encoding
     print "<!-- generator=\"Kukkaisvoima version %s\" -->" % version
