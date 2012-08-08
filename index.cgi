@@ -64,6 +64,8 @@ favicon = 'http://yourdomain/favicon.ico'
 doctype = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">'
 # Email to send comments to
 blogemail = 'you@yourdomain'
+# Email by blog owner
+owneremail = 'owner@youremail'
 # Language for the feed
 language = 'en'
 # Number of entries per page
@@ -185,7 +187,7 @@ def generateDate(fileName):
 def sendEmail(to, subject, message):
     msg = MIMEText(_text=wrapEmail(message), _charset='%s' % encoding)
     msg['subject'] = subject
-    sender = 'Kukkaisvoima blog (%s) <%s>' % (baseurl, blogemail)
+    sender = '%s <%s>' % (blogname, blogemail)
     s = smtplib.SMTP()
     s.connect()
     s.sendmail(sender, to, msg.as_string())
@@ -513,7 +515,7 @@ def handleIncomingComment(fs):
             email_body_admin += \
                 "\n\nNote: commenter subscribed (%s) to follow-up comments" \
                 % email
-        sendEmail(blogemail, email_subject, email_body_admin)
+        sendEmail(owneremail, email_subject, email_body_admin)
     except:
         pass # TODO log errors, for now just fail silently
 
@@ -523,15 +525,16 @@ def handleIncomingComment(fs):
 
     email_and_id = getSubscribedEmails(comments_for_entry)
     for subscribe_email in email_and_id.iterkeys():
-        comm_id = email_and_id[subscribe_email]
-        try:
-            email_body_comment = email_body
-            email_body_comment += \
-                "Click here to unsubscribe instantly: %s/%s?unsubscribe=%s\n" \
-                % (baseurl, name, comm_id)
-            sendEmail(subscribe_email, email_subject, email_body_comment)
-        except:
-            pass # TODO log errors, for now just fail silently
+        if subscribe_email != owneremail:
+            comm_id = email_and_id[subscribe_email]
+            try:
+                email_body_comment = email_body
+                email_body_comment += \
+                    "Click here to unsubscribe instantly: %s/%s?unsubscribe=%s\n" \
+                    % (baseurl, name, comm_id)
+                sendEmail(subscribe_email, email_subject, email_body_comment)
+            except:
+                pass # TODO log errors, for now just fail silently
 
     # redirect
     return 'Location: %s/%s#comment-%s\n' % (baseurl, name, commentnum)
